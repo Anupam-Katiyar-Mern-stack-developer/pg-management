@@ -3,6 +3,7 @@ import type { RouteObject } from 'react-router-dom';
 import { PublicLayout } from '../components/layout';
 import { HomePage } from '../pages/public/HomePage';
 import { SearchPage } from '../pages/public/SearchPage';
+import { PGDetailsPage } from '../pages/public/PGDetailsPage';
 
 export const publicRoutes: RouteObject[] = [
   {
@@ -11,7 +12,7 @@ export const publicRoutes: RouteObject[] = [
     children: [
       { index: true, element: <HomePage /> },
       { path: 'search', element: <SearchPage /> },
-      { path: 'pg/:id', element: <div className="p-8">PG Details Page (Coming Soon)</div> },
+      { path: 'pg/:id', element: <PGDetailsPage /> },
       { path: 'list-property', element: <div className="p-8">List Your PG (Coming Soon)</div> },
     ],
   },
