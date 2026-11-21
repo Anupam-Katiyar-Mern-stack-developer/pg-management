@@ -1,6 +1,8 @@
 // backend/src/app.ts
 import express, { Request, Response } from 'express';
 import cors from 'cors';
+import superAdminRoutes from './routes/superAdmin.routes';
+import authRoutes from './routes/auth.routes';
 
 const app = express();
 
@@ -12,5 +14,9 @@ app.use(express.json());
 app.get('/', (req: Request, res: Response) => {
     res.json({ message: 'PG Management API is ready 🚀' });
 });
+
+app.use('/api/super-admin', superAdminRoutes);
+app.use('/api/auth', authRoutes);
+
 
 export default app;
