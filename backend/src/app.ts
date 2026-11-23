@@ -3,7 +3,7 @@ import express, { Request, Response } from 'express';
 import cors from 'cors';
 import superAdminRoutes from './routes/superAdmin.routes';
 import authRoutes from './routes/auth.routes';
-
+import propertyRoutes from './routes/property.routes';
 const app = express();
 
 // Middlewares
@@ -17,6 +17,7 @@ app.get('/', (req: Request, res: Response) => {
 
 app.use('/api/super-admin', superAdminRoutes);
 app.use('/api/auth', authRoutes);
+app.use('/api/properties', propertyRoutes);
 
 
 export default app;
