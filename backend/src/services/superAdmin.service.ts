@@ -1,6 +1,7 @@
 // src/services/superAdmin.service.ts
 import bcrypt from 'bcryptjs';
-import { pool } from '../config/db';
+import 
+ pool  from '../config/db';
 import { AppError } from '../utils/AppError';
 import type { AdminPermissions } from '../types/auth.types';
 
