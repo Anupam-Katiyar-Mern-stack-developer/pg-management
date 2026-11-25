@@ -12,5 +12,7 @@ router.get('/admins', superAdminController.listAdmins);
 router.post('/admins', superAdminController.createAdmin);
 router.patch('/admins/:adminId/permissions', superAdminController.updatePermissions);
 router.patch('/admins/:adminId/status', superAdminController.toggleStatus);
+router.get('/properties/pending', superAdminController.listPendingProperties);
+router.patch('/properties/:propertyId/approval', superAdminController.updatePropertyApproval);
 
 export default router;

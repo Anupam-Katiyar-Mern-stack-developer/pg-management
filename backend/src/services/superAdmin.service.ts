@@ -1,7 +1,7 @@
 // src/services/superAdmin.service.ts
 import bcrypt from 'bcryptjs';
-import 
- pool  from '../config/db';
+import
+pool from '../config/db';
 import { AppError } from '../utils/AppError';
 import type { AdminPermissions } from '../types/auth.types';
 
@@ -146,6 +146,40 @@ export const toggleAdminStatus = async (adminId: string, isActive: boolean) => {
 
   if (result.rows.length === 0) {
     throw new AppError('Admin not found', 404);
+  }
+
+  return result.rows[0];
+};
+
+
+export const listPendingProperties = async () => {
+  const result = await pool.query(
+    `SELECT
+       p.*,
+       u.name AS admin_name,
+       u.email AS admin_email
+     FROM properties p
+     JOIN users u ON p.admin_id = u.id
+     WHERE p.is_approved = false
+     ORDER BY p.created_at ASC`
+  );
+  return result.rows;
+};
+
+export const updatePropertyApproval = async (
+  propertyId: string,
+  isApproved: boolean
+) => {
+  const result = await pool.query(
+    `UPDATE properties
+     SET is_approved = $1
+     WHERE id = $2
+     RETURNING id, name, slug, city, locality, is_approved`,
+    [isApproved, propertyId]
+  );
+
+  if (result.rows.length === 0) {
+    throw new AppError('Property not found', 404);
   }
 
   return result.rows[0];

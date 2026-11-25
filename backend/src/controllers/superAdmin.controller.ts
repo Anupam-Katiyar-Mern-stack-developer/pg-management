@@ -72,3 +72,32 @@ export const toggleStatus = async (req: Request, res: Response): Promise<void> =
     handleControllerError(res, error, 'ToggleStatus');
   }
 };
+
+export const listPendingProperties = async (_req: Request, res: Response): Promise<void> => {
+  try {
+    const properties = await superAdminService.listPendingProperties();
+    res.json({ properties });
+  } catch (error) {
+    handleControllerError(res, error, 'ListPendingProperties');
+  }
+};
+
+export const updatePropertyApproval = async (req: Request, res: Response): Promise<void> => {
+  const { propertyId } = req.params;
+  const { is_approved } = req.body as { is_approved?: boolean };
+
+  if (typeof is_approved !== 'boolean') {
+    res.status(400).json({ message: 'is_approved must be a boolean' });
+    return;
+  }
+
+  try {
+    const property = await superAdminService.updatePropertyApproval(propertyId, is_approved);
+    res.json({
+      message: is_approved ? 'Property approved and live on marketplace' : 'Property approval revoked',
+      property,
+    });
+  } catch (error) {
+    handleControllerError(res, error, 'UpdatePropertyApproval');
+  }
+};
