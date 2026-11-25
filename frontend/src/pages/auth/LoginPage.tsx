@@ -1,10 +1,12 @@
 // src/pages/auth/LoginPage.tsx
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import { Building2, Mail, Lock } from 'lucide-react';
 import { Button, Card, Input } from '../../components/common';
 import { SEO } from '../../components/shared';
 import { useAuth, type AuthUser, type UserRole } from '../../context/AuthContext';
+import { loginApi } from '../../services/auth.service';
 
 const DEMO_USERS: Record<UserRole, AuthUser> = {
     SUPER_ADMIN: {
@@ -21,7 +23,7 @@ const DEMO_USERS: Record<UserRole, AuthUser> = {
         permissions: {
             allowed_pg_count: 2,
             can_use_invoicing: true,
-            can_use_ticketing: false, // Test karne ke liye Tickets locked rakha hai
+            can_use_ticketing: false,
             can_use_online_payment: true,
         },
     },
@@ -47,8 +49,9 @@ export const LoginPage: React.FC = () => {
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [error, setError] = useState<string>('');
+    const [loading, setLoading] = useState<boolean>(false);
 
-    const handleLogin = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setError('');
 
@@ -57,20 +60,24 @@ export const LoginPage: React.FC = () => {
             return;
         }
 
-        // Temporary email-based role detection (baad mein POST /api/auth/login aayega)
-        const lower = email.toLowerCase();
-        const role: UserRole = lower.includes('super')
-            ? 'SUPER_ADMIN'
-            : lower.includes('owner') || lower.includes('admin')
-                ? 'ADMIN'
-                : 'TENANT';
-
-        login({ ...DEMO_USERS[role], email });
-        navigate(ROLE_REDIRECT[role], { replace: true });
+        try {
+            setLoading(true);
+            const { token, user } = await loginApi(email.trim(), password);
+            login(user, token);
+            navigate(ROLE_REDIRECT[user.role], { replace: true });
+        } catch (err) {
+            if (axios.isAxiosError(err)) {
+                setError(err.response?.data?.message || 'Invalid email or password.');
+            } else {
+                setError('Something went wrong. Please try again.');
+            }
+        } finally {
+            setLoading(false);
+        }
     };
 
     const handleDemoLogin = (role: UserRole) => {
-        login(DEMO_USERS[role]);
+        login(DEMO_USERS[role], 'demo-token');
         navigate(ROLE_REDIRECT[role], { replace: true });
     };
 
@@ -105,6 +112,7 @@ export const LoginPage: React.FC = () => {
                         leftIcon={<Mail className="w-4 h-4" />}
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
+                        disabled={loading}
                     />
                     <Input
                         label="Password"
@@ -114,9 +122,16 @@ export const LoginPage: React.FC = () => {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         error={error}
+                        disabled={loading}
                     />
-                    <Button type="submit" variant="primary" size="lg" className="w-full">
-                        Sign In
+                    <Button
+                        type="submit"
+                        variant="primary"
+                        size="lg"
+                        className="w-full"
+                        disabled={loading}
+                    >
+                        {loading ? 'Signing in...' : 'Sign In'}
                     </Button>
                 </form>
 
