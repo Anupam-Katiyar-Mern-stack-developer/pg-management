@@ -1,5 +1,5 @@
 // src/services/ticket.service.ts
-import { pool } from '../config/db';
+import  pool from '../config/db';
 import { AppError } from '../utils/AppError';
 import type { UserRole } from '../types/auth.types';
 
