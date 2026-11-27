@@ -2,6 +2,7 @@
 import type { RouteObject } from 'react-router-dom';
 import { TenantLayout } from '../components/layout';
 import { TenantDashboardPage } from '../pages/tenant/TenantDashboardPage';
+import { TenantInvoicesPage } from '../pages/tenant/TenantInvoicesPage';
 
 export const tenantRoutes: RouteObject[] = [
     {
@@ -9,7 +10,7 @@ export const tenantRoutes: RouteObject[] = [
         element: <TenantLayout tenantName="Rahul Sharma" roomLabel="Room 204 • Bed A" />,
         children: [
             { path: 'dashboard', element: <TenantDashboardPage/>},
-            { path: 'invoices', element: <div className="p-4">My Rent Invoices</div> },
+            { path: 'invoices', element: <TenantInvoicesPage/> },
             { path: 'tickets', element: <div className="p-4">My Support Tickets</div> },
         ],
     },

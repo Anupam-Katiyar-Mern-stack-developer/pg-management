@@ -142,3 +142,22 @@ export const createTenantTicketApi = async (
         }, 300);
     });
 };
+
+// src/services/tenantDashboard.service.ts (add at bottom)
+
+export const payTenantInvoiceApi = async (
+    invoiceId: string,
+    paymentMode: 'UPI' | 'ONLINE'
+): Promise<{ invoiceId: string; paymentMode: 'UPI' | 'ONLINE'; paidAt: string }> => {
+    // Real API connect hone par:
+    // const { data } = await api.patch(`/invoices/${invoiceId}/pay`, { paymentMode });
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            resolve({
+                invoiceId,
+                paymentMode,
+                paidAt: new Date().toISOString().split('T')[0],
+            });
+        }, 350);
+    });
+};

@@ -4,6 +4,8 @@ import axios from 'axios';
 import {
     createTenantTicketApi,
     fetchTenantDashboardApi,
+    payTenantInvoiceApi,
+
     type CreateTicketPayload,
     type TenantDashboardData,
     type TenantInvoice,
@@ -19,6 +21,7 @@ interface TenantState {
     error: string;
     ticketSubmitting: boolean;
     ticketError: string;
+    payingInvoiceId: string | null;
 }
 
 const initialState: TenantState = {
@@ -29,6 +32,7 @@ const initialState: TenantState = {
     error: '',
     ticketSubmitting: false,
     ticketError: '',
+    payingInvoiceId: null,
 };
 
 export const fetchTenantDashboardThunk = createAsyncThunk<
@@ -62,6 +66,21 @@ export const raiseTenantTicketThunk = createAsyncThunk<
             );
         }
         return rejectWithValue('Something went wrong. Please try again.');
+    }
+});
+
+export const payTenantInvoiceThunk = createAsyncThunk<
+    { invoiceId: string; paymentMode: 'UPI' | 'ONLINE'; paidAt: string },
+    { invoiceId: string; paymentMode: 'UPI' | 'ONLINE' },
+    { rejectValue: string }
+>('tenant/payInvoice', async ({ invoiceId, paymentMode }, { rejectWithValue }) => {
+    try {
+        return await payTenantInvoiceApi(invoiceId, paymentMode);
+    } catch (err) {
+        if (axios.isAxiosError(err)) {
+            return rejectWithValue(err.response?.data?.message || 'Payment failed.');
+        }
+        return rejectWithValue('Could not process payment.');
     }
 });
 
@@ -102,6 +121,23 @@ const tenantSlice = createSlice({
             .addCase(raiseTenantTicketThunk.rejected, (state, action) => {
                 state.ticketSubmitting = false;
                 state.ticketError = action.payload || 'Could not submit ticket.';
+            })
+
+            // Pay Invoice
+            .addCase(payTenantInvoiceThunk.pending, (state, action) => {
+                state.payingInvoiceId = action.meta.arg.invoiceId;
+            })
+            .addCase(payTenantInvoiceThunk.fulfilled, (state, action) => {
+                state.payingInvoiceId = null;
+                const target = state.invoices.find((i) => i.id === action.payload.invoiceId);
+                if (target) {
+                    target.status = 'PAID';
+                    target.paymentMode = action.payload.paymentMode;
+                    target.paidAt = action.payload.paidAt;
+                }
+            })
+            .addCase(payTenantInvoiceThunk.rejected, (state) => {
+                state.payingInvoiceId = null;
             });
     },
 });
