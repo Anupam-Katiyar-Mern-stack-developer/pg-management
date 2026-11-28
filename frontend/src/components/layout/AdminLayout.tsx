@@ -8,9 +8,9 @@ import {
     Users,
     Receipt,
     MessageSquareWarning,
-    ShieldCheck,
     UserPlus,
-    SlidersHorizontal,
+    Headphones,
+    Globe,
     Menu,
     X,
     LogOut,
@@ -50,9 +50,10 @@ interface AdminLayoutProps {
 
 const MENU_BY_ROLE: Record<AdminRole, SidebarItem[]> = {
     ADMIN: [
-       
-        { label: 'Properties & Beds', to: '/admin/inventory', icon: BedDouble },
-        { label: 'Tenants & Leads', to: '/admin/tenants', icon: Users },
+        
+        { label: 'My PGs & Rooms', to: '/admin/properties', icon: BedDouble },
+        { label: 'Tenants', to: '/admin/tenants', icon: Users },
+        { label: 'Visit Leads', to: '/admin/leads', icon: UserPlus },
         {
             label: 'Invoices & Billing',
             to: '/admin/invoices',
@@ -60,17 +61,20 @@ const MENU_BY_ROLE: Record<AdminRole, SidebarItem[]> = {
             requiredPermission: 'can_use_invoicing',
         },
         {
-            label: 'Tickets',
+            label: 'Tenant Tickets',
             to: '/admin/tickets',
             icon: MessageSquareWarning,
             requiredPermission: 'can_use_ticketing',
         },
+        { label: 'Super Admin Support', to: '/admin/support', icon: Headphones },
     ],
     SUPER_ADMIN: [
-      
-        { label: 'Create & Manage Admins', to: '/super-admin/admins', icon: UserPlus },
-        { label: 'PG Approvals', to: '/super-admin/approvals', icon: ShieldCheck },
-        { label: 'Feature Permissions', to: '/super-admin/permissions', icon: SlidersHorizontal },
+        
+        { label: 'Manage PG Admins', to: '/super-admin/admins', icon: UserPlus },
+        { label: 'All Hostels & PGs', to: '/super-admin/properties', icon: Building2 },
+        { label: 'All Tenants', to: '/super-admin/tenants', icon: Users },
+        { label: 'Admin Support', to: '/super-admin/support', icon: Headphones },
+        { label: 'Site Settings & SEO', to: '/super-admin/settings', icon: Globe },
     ],
 };
 
@@ -91,7 +95,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
     });
 
     return (
-        <div className="min-h-screen flex bg-slate-50 text-slate-800">
+        <div className="h-screen overflow-hidden flex bg-slate-50 text-slate-800">
             {/* Mobile Overlay */}
             {sidebarOpen && (
                 <div
@@ -186,7 +190,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
                     </div>
                 </header>
 
-                <main className="flex-1 p-4 sm:p-6 lg:p-8">
+                <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
                     <Outlet />
                 </main>
             </div>
