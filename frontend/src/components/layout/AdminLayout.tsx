@@ -67,7 +67,7 @@ const MENU_BY_ROLE: Record<AdminRole, SidebarItem[]> = {
         },
     ],
     SUPER_ADMIN: [
-        { label: 'Overview', to: '/super-admin/dashboard', icon: LayoutDashboard },
+      
         { label: 'Create & Manage Admins', to: '/super-admin/admins', icon: UserPlus },
         { label: 'PG Approvals', to: '/super-admin/approvals', icon: ShieldCheck },
         { label: 'Feature Permissions', to: '/super-admin/permissions', icon: SlidersHorizontal },

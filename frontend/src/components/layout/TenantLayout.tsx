@@ -23,7 +23,7 @@ interface TenantLayoutProps {
 }
 
 const TENANT_NAV_ITEMS: readonly TenantNavItem[] = [
-    { label: 'Home', to: '/tenant/dashboard', icon: Home },
+    { label: 'Home', to: '/tenant', icon: Home },
     { label: 'Invoices', to: '/tenant/invoices', icon: Receipt },
     { label: 'Support', to: '/tenant/tickets', icon: MessageSquareWarning },
 ];
