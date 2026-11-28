@@ -1,6 +1,7 @@
 // src/routes/adminRoutes.tsx
 import type { RouteObject } from 'react-router-dom';
 import { AdminLayout, type AdminPermissions } from '../components/layout';
+import { AdminDashboardPage } from '../pages/admin/AdminDashboardPage';
 
 // Temporary mock permissions (baad mein Auth Context se aayega)
 const mockAdminPermissions: AdminPermissions = {
@@ -21,7 +22,7 @@ export const adminRoutes: RouteObject[] = [
             />
         ),
         children: [
-            { path: 'dashboard', element: <div className="p-4">Admin Dashboard</div> },
+            { index: true, element:<AdminDashboardPage/> },
             { path: 'inventory', element: <div className="p-4">Properties &amp; Beds</div> },
             { path: 'tenants', element: <div className="p-4">Tenants &amp; Leads</div> },
             { path: 'invoices', element: <div className="p-4">Invoices &amp; Billing</div> },

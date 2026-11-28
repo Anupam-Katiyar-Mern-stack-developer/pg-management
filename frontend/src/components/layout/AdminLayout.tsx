@@ -50,7 +50,7 @@ interface AdminLayoutProps {
 
 const MENU_BY_ROLE: Record<AdminRole, SidebarItem[]> = {
     ADMIN: [
-        { label: 'Dashboard', to: '/admin/dashboard', icon: LayoutDashboard },
+       
         { label: 'Properties & Beds', to: '/admin/inventory', icon: BedDouble },
         { label: 'Tenants & Leads', to: '/admin/tenants', icon: Users },
         {
